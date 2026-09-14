@@ -1498,8 +1498,200 @@ function generateVirtualLabToolContent() {
                 color: white;
             }
 
-            .virtual-lab-element-picker::-webkit-scrollbar {
+            .virtual-lab-element-picker::-webkit-scrollbar,
+            .virtual-lab-picker-list::-webkit-scrollbar {
                 display: none;
+            }
+
+            .virtual-lab-element-picker {
+                width: 220px;
+                max-height: 360px;
+                overflow: hidden;
+            }
+
+            .virtual-lab-equipment-picker {
+                width: 280px;
+            }
+
+            .virtual-lab-picker-list {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                overflow-y: auto;
+                min-height: 0;
+                flex: 1;
+            }
+
+            .virtual-lab-picker-search {
+                flex-shrink: 0;
+                margin: 2px 2px 4px;
+                padding: 8px 10px;
+                border: 1px solid rgba(0,0,0,0.1);
+                border-radius: 9px;
+                background: rgba(255,255,255,0.9);
+                font: inherit;
+                font-size: 13px;
+                color: #2f3136;
+                outline: none;
+            }
+
+            .virtual-lab-picker-search:focus {
+                border-color: rgba(59,130,246,0.6);
+            }
+
+            .virtual-lab-picker-num {
+                margin-left: auto;
+                font-size: 11px;
+                color: #86868b;
+            }
+
+            .virtual-lab-picker-empty {
+                padding: 12px 10px;
+                font-size: 12px;
+                color: #86868b;
+            }
+
+            .virtual-lab-picker-item.equipment {
+                align-items: center;
+            }
+
+            .virtual-lab-picker-icon {
+                width: 34px;
+                height: 34px;
+                flex-shrink: 0;
+                color: #475569;
+            }
+
+            .virtual-lab-picker-text {
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+            }
+
+            .virtual-lab-picker-use {
+                font-size: 11px;
+                font-weight: 450;
+                color: #86868b;
+                line-height: 1.3;
+            }
+
+            .virtual-lab-picker-clear {
+                flex-shrink: 0;
+                margin: 4px 2px 2px;
+                padding: 8px;
+                border: none;
+                border-radius: 9px;
+                background: rgba(239,68,68,0.08);
+                color: #b91c1c;
+                font: inherit;
+                font-size: 12px;
+                font-weight: 650;
+                cursor: pointer;
+            }
+
+            .virtual-lab-picker-clear:hover {
+                background: rgba(239,68,68,0.14);
+            }
+
+            /* ===== Bench equipment ===== */
+            .vlab-eq-svg { overflow: visible; }
+            .vlab-eq-svg .glass { fill: rgba(214, 234, 250, 0.45); }
+            .vlab-eq-svg .liq { fill: rgba(77, 166, 255, 0.55); stroke: none; }
+            .vlab-eq-svg .metal { fill: #cbd5e1; }
+            .vlab-eq-svg .wood { fill: #c89b6d; }
+            .vlab-eq-svg .ceramic { fill: #f1f5f9; }
+            .vlab-eq-svg .flame { fill: #fb923c; stroke: #ea580c; }
+            .vlab-eq-svg .flame-in { fill: #60a5fa; stroke: none; }
+            .vlab-eq-svg .red { fill: #ef4444; stroke: none; }
+            .vlab-eq-svg .screen { fill: #86efac; }
+            .vlab-eq-svg .rubber { fill: #57534e; }
+            .vlab-eq-svg .rubber-blue { fill: #93c5fd; }
+            .vlab-eq-svg .cloth { fill: #f8fafc; }
+            .vlab-eq-svg .litmus-red { fill: #fca5a5; }
+            .vlab-eq-svg .litmus-blue { fill: #93c5fd; }
+
+            .virtual-lab-equipment-item {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 76px;
+                height: 76px;
+                color: #475569;
+                cursor: grab;
+                touch-action: none;
+                z-index: 4;
+                will-change: transform;
+                filter: drop-shadow(0 3px 4px rgba(0,0,0,0.12));
+            }
+
+            .virtual-lab-equipment-item svg {
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+
+            .virtual-lab-equipment-item.dragging {
+                cursor: grabbing;
+                z-index: 12;
+            }
+
+            .virtual-lab-equipment-label {
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                margin-top: 2px;
+                padding: 2px 8px;
+                border-radius: 999px;
+                background: rgba(30, 41, 59, 0.85);
+                color: #fff;
+                font-size: 10px;
+                font-weight: 600;
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.15s ease;
+            }
+
+            .virtual-lab-equipment-remove {
+                position: absolute;
+                top: -6px;
+                right: -6px;
+                width: 20px;
+                height: 20px;
+                border: none;
+                border-radius: 999px;
+                background: #ef4444;
+                color: #fff;
+                font-size: 13px;
+                line-height: 20px;
+                padding: 0;
+                cursor: pointer;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.15s ease;
+            }
+
+            .virtual-lab-equipment-item:hover .virtual-lab-equipment-label,
+            .virtual-lab-equipment-item.selected .virtual-lab-equipment-label,
+            .virtual-lab-equipment-item:hover .virtual-lab-equipment-remove,
+            .virtual-lab-equipment-item.selected .virtual-lab-equipment-remove {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            @media (max-width: 640px) {
+                .virtual-lab-controls {
+                    gap: 6px;
+                }
+                .virtual-lab-btn {
+                    padding: 8px 12px;
+                    font-size: 0.8rem;
+                }
+                .virtual-lab-equipment-item {
+                    width: 60px;
+                    height: 60px;
+                }
             }
 
             .virtual-lab-thermometer {
@@ -1699,11 +1891,22 @@ function generateVirtualLabToolContent() {
                         <button class="virtual-lab-btn secondary" id="virtual-lab-change-element-btn" type="button" style="display:flex;align-items:center;gap:6px">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>${t("virtualLab.element", "Element")}
                         </button>
+                        <button class="virtual-lab-btn secondary" id="virtual-lab-equipment-btn" type="button" style="display:flex;align-items:center;gap:6px">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 001.3 2h12.4a1.5 1.5 0 001.3-2L14 9V3"/></svg>${t("virtualLab.equipment", "Equipment")}
+                        </button>
                     </div>
                 </div>
             </div>
             <div class="virtual-lab-reaction-info" id="virtual-lab-reaction-info"></div>
-            <div class="virtual-lab-element-picker" id="virtual-lab-element-picker"></div>
+            <div class="virtual-lab-element-picker" id="virtual-lab-element-picker">
+                <input class="virtual-lab-picker-search" id="virtual-lab-element-search" type="search" autocomplete="off" placeholder="${t("virtualLab.searchElements", "Search elements…")}">
+                <div class="virtual-lab-picker-list" id="virtual-lab-element-list"></div>
+            </div>
+            <div class="virtual-lab-element-picker virtual-lab-equipment-picker" id="virtual-lab-equipment-picker">
+                <input class="virtual-lab-picker-search" id="virtual-lab-equipment-search" type="search" autocomplete="off" placeholder="${t("virtualLab.searchEquipment", "Search equipment…")}">
+                <div class="virtual-lab-picker-list" id="virtual-lab-equipment-list"></div>
+                <button class="virtual-lab-picker-clear" id="virtual-lab-equipment-clear" type="button">${t("virtualLab.clearEquipment", "Clear bench")}</button>
+            </div>
         </div>
     `;
 }

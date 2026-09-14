@@ -11,6 +11,8 @@ import {
 import { formatReactionError } from "./equationBalancer.js";
 import { predictReaction } from "./reactionPredictor.js";
 import { t } from "./langController.js";
+import { elements as allElements } from "../data/elementsData.js";
+import { LAB_EQUIPMENT_GROUPS, LAB_EQUIPMENT } from "../data/labEquipment.js";
 
 const TOOL_LISTENER_MAP = {
   balancer: attachBalancerListeners,
@@ -830,6 +832,13 @@ function attachVirtualLabListeners() {
   const thermoFill = document.getElementById("virtual-lab-thermo-fill");
   const thermoTemp = document.getElementById("virtual-lab-thermo-temp");
   const reactionInfoBadge = document.getElementById("virtual-lab-reaction-info");
+  const elementList = document.getElementById("virtual-lab-element-list");
+  const elementSearch = document.getElementById("virtual-lab-element-search");
+  const equipmentBtn = document.getElementById("virtual-lab-equipment-btn");
+  const equipmentPicker = document.getElementById("virtual-lab-equipment-picker");
+  const equipmentList = document.getElementById("virtual-lab-equipment-list");
+  const equipmentSearch = document.getElementById("virtual-lab-equipment-search");
+  const equipmentClearBtn = document.getElementById("virtual-lab-equipment-clear");
   if (
     !scene ||
     !beakerWrap ||
@@ -885,27 +894,31 @@ function attachVirtualLabListeners() {
     totalDrag: 0,
   };
 
-  // Metal elements data
-  const METAL_ELEMENTS = [
-    { group: "Alkali Metal", elements: [
-      { sym: "Li", name: "Lithium", color: "#e85d5d" },
-      { sym: "Na", name: "Sodium", color: "#e85d5d" },
-      { sym: "K", name: "Potassium", color: "#e85d5d" },
-      { sym: "Rb", name: "Rubidium", color: "#e85d5d" },
-      { sym: "Cs", name: "Caesium", color: "#e85d5d" },
-      { sym: "Fr", name: "Francium", color: "#e85d5d" },
-    ]},
-    { group: "Alkaline Earth Metal", elements: [
-      { sym: "Be", name: "Beryllium", color: "#e8a14d" },
-      { sym: "Mg", name: "Magnesium", color: "#e8a14d" },
-      { sym: "Ca", name: "Calcium", color: "#e8a14d" },
-      { sym: "Sr", name: "Strontium", color: "#e8a14d" },
-      { sym: "Ba", name: "Barium", color: "#e8a14d" },
-      { sym: "Ra", name: "Radium", color: "#e8a14d" },
-    ]},
-  ];
+  // All elements, grouped by category for the picker
+  const CATEGORY_COLORS = {
+    "Alkali Metal": "#e85d5d",
+    "Alkaline Earth Metal": "#e8a14d",
+    "Transition Metal": "#d4a72c",
+    "Post-transition Metal": "#5fae7a",
+    "Metalloid": "#3fa7a0",
+    "Other nonmetal": "#4a90d9",
+    "Halogen": "#7a6ad8",
+    "Noble Gas": "#a45fc9",
+    "Lanthanide": "#d0689b",
+    "Actinide": "#c2577a",
+    "Unknown": "#8e8e93",
+  };
+  const ELEMENT_GROUPS = Object.keys(CATEGORY_COLORS)
+    .map(category => ({
+      group: category,
+      elements: allElements
+        .filter(el => el.category === category && typeof el.number === "number") // skip La-Lu / Ac-Lr placeholder cells
+        .map(el => ({ sym: el.symbol, name: el.name, number: el.number, color: CATEGORY_COLORS[category] })),
+    }))
+    .filter(g => g.elements.length > 0);
+  const ALL_PICKER_ELEMENTS = ELEMENT_GROUPS.flatMap(g => g.elements);
 
-  let selectedElement = METAL_ELEMENTS[0].elements[1]; // Na by default
+  let selectedElement = ALL_PICKER_ELEMENTS.find(el => el.sym === "Na") || ALL_PICKER_ELEMENTS[0];
 
   // ===== Reaction Data: Metal + Water reactions =====
   // rate = fraction of cube consumed per frame (higher = faster reaction)
@@ -928,6 +941,11 @@ function attachVirtualLabListeners() {
     Ba:  { rate: 0.00060, heat: 50, bubbleRate: 0.70, waterColor: 'rgba(220,225,235,0.45)', eq: 'Ba + 2H₂O → Ba(OH)₂ + H₂↑' },
     Ra:  { rate: 0.00080, heat: 60, bubbleRate: 0.80, waterColor: 'rgba(215,220,230,0.50)', eq: 'Ra + 2H₂O → Ra(OH)₂ + H₂↑' },
   };
+
+  /** Reaction data for a symbol; elements without a water reaction get a no-reaction entry */
+  function getReactionData(sym) {
+    return REACTION_DATA[sym] || { rate: 0, heat: 0, bubbleRate: 0, waterColor: null, eq: `${sym} + H₂O → No Reaction` };
+  }
 
   // Reaction state
   const rxn = {
@@ -1027,8 +1045,8 @@ function attachVirtualLabListeners() {
 
   /** Main per-frame reaction tick */
   function tickReaction(metrics) {
-    const data = REACTION_DATA[selectedElement.sym];
-    if (!data || data.rate === 0) {
+    const data = getReactionData(selectedElement.sym);
+    if (data.rate === 0) {
       // No reaction (e.g. Be) — cool down, clear state
       if (rxn.active) {
         rxn.active = false;
@@ -1299,69 +1317,254 @@ function attachVirtualLabListeners() {
       if (reactionInfoBadge) reactionInfoBadge.classList.remove('active');
   }
 
-  function buildPickerHTML() {
-    if (!elementPicker) return;
+  function escapeHTML(str) {
+    return String(str).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+  }
+
+  function buildPickerHTML(query = "") {
+    if (!elementList) return;
+    const q = query.trim().toLowerCase();
     let html = '';
-    METAL_ELEMENTS.forEach(group => {
+    ELEMENT_GROUPS.forEach(group => {
+      const matches = group.elements.filter(el =>
+        !q || el.sym.toLowerCase().startsWith(q) || el.name.toLowerCase().includes(q) || String(el.number) === q
+      );
+      if (matches.length === 0) return;
       html += `<div class="virtual-lab-picker-group">${group.group}</div>`;
-      group.elements.forEach(el => {
+      matches.forEach(el => {
         const isActive = el.sym === selectedElement.sym ? ' active' : '';
-        html += `<button class="virtual-lab-picker-item${isActive}" data-sym="${el.sym}">
+        html += `<button class="virtual-lab-picker-item${isActive}" type="button" data-sym="${el.sym}">
           <span class="virtual-lab-picker-sym" style="background:${el.color}">${el.sym}</span>
           ${el.name}
+          <span class="virtual-lab-picker-num">${el.number}</span>
         </button>`;
       });
     });
-    elementPicker.innerHTML = html;
+    elementList.innerHTML = html || `<div class="virtual-lab-picker-empty">${t("virtualLab.noResults", "No matches")}</div>`;
+  }
+
+  function buildEquipmentHTML(query = "") {
+    if (!equipmentList) return;
+    const q = query.trim().toLowerCase();
+    let html = '';
+    LAB_EQUIPMENT_GROUPS.forEach(group => {
+      const matches = group.items.filter(item =>
+        !q || item.name.toLowerCase().includes(q) || item.use.toLowerCase().includes(q)
+      );
+      if (matches.length === 0) return;
+      html += `<div class="virtual-lab-picker-group">${group.group}</div>`;
+      matches.forEach(item => {
+        html += `<button class="virtual-lab-picker-item equipment" type="button" data-equipment="${item.id}">
+          <svg class="virtual-lab-picker-icon vlab-eq-svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${item.svg}</svg>
+          <span class="virtual-lab-picker-text">${escapeHTML(item.name)}<span class="virtual-lab-picker-use">${escapeHTML(item.use)}</span></span>
+        </button>`;
+      });
+    });
+    equipmentList.innerHTML = html || `<div class="virtual-lab-picker-empty">${t("virtualLab.noResults", "No matches")}</div>`;
+  }
+
+  /** Place a popover above its trigger button, kept inside the shell */
+  function positionPopover(popover, button) {
+    const btnRect = button.getBoundingClientRect();
+    const shell = document.querySelector('.virtual-lab-shell');
+    const shellRect = shell.getBoundingClientRect();
+    const width = popover.offsetWidth || 220;
+
+    let left = btnRect.left - shellRect.left + (btnRect.width / 2) - width / 2;
+    const bottom = shellRect.bottom - btnRect.top + 8;
+    if (left + width > shellRect.width - 10) left = shellRect.width - width - 10;
+    if (left < 10) left = 10;
+
+    popover.style.top = 'auto';
+    popover.style.bottom = bottom + 'px';
+    popover.style.left = left + 'px';
+    popover.style.maxHeight = Math.max(180, Math.min(360, btnRect.top - shellRect.top - 16)) + 'px';
   }
 
   function openPicker() {
     if (!elementPicker || !changeElementBtn) return;
+    closeEquipmentPicker();
+    if (elementSearch) elementSearch.value = '';
     buildPickerHTML();
-    // Position above button relative to shell
-    const btnRect = changeElementBtn.getBoundingClientRect();
-    const shell = document.querySelector('.virtual-lab-shell');
-    const shellRect = shell.getBoundingClientRect();
-    
-    // Center it relative to the button (picker is 160px wide)
-    let left = btnRect.left - shellRect.left + (btnRect.width / 2) - 80;
-    // Set 8px gap above the button's top edge
-    let bottom = shellRect.bottom - btnRect.top + 8;
-    
-    // Keep within shell horizontally
-    if (left < 10) left = 10;
-    if (left + 160 > shellRect.width) left = shellRect.width - 170;
-    
-    elementPicker.style.top = 'auto';
-    elementPicker.style.bottom = bottom + 'px';
-    elementPicker.style.left = left + 'px';
     elementPicker.classList.add('open');
-
-    // Handle selection
-    elementPicker.querySelectorAll('.virtual-lab-picker-item').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const sym = e.currentTarget.dataset.sym;
-        const found = METAL_ELEMENTS.flatMap(g => g.elements).find(el => el.sym === sym);
-        if (found) {
-          selectedElement = found;
-          resetReaction();
-          updateCubeAppearance();
-        }
-        closePicker();
-      });
-    });
+    positionPopover(elementPicker, changeElementBtn);
+    const activeItem = elementList?.querySelector('.virtual-lab-picker-item.active');
+    // Scroll only the list (scrollIntoView would also scroll the modal)
+    if (activeItem) elementList.scrollTop = activeItem.offsetTop - elementList.offsetTop - elementList.clientHeight / 2 + activeItem.offsetHeight / 2;
   }
 
   function closePicker() {
     if (elementPicker) elementPicker.classList.remove('open');
   }
 
+  if (elementList) {
+    elementList.addEventListener("click", (e) => {
+      const btn = e.target.closest('.virtual-lab-picker-item');
+      if (!btn) return;
+      const found = ALL_PICKER_ELEMENTS.find(el => el.sym === btn.dataset.sym);
+      if (found) {
+        selectedElement = found;
+        resetReaction();
+        updateCubeAppearance();
+      }
+      closePicker();
+    }, { signal });
+  }
+
+  if (elementSearch) {
+    elementSearch.addEventListener("input", () => buildPickerHTML(elementSearch.value), { signal });
+  }
+
   if (changeElementBtn) {
     changeElementBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      openPicker();
-    });
+      if (elementPicker?.classList.contains('open')) closePicker();
+      else openPicker();
+    }, { signal });
   }
+
+  // ===== Bench equipment (draggable apparatus) =====
+  const benchItems = [];
+
+  function openEquipmentPicker() {
+    if (!equipmentPicker || !equipmentBtn) return;
+    closePicker();
+    if (equipmentSearch) equipmentSearch.value = '';
+    buildEquipmentHTML();
+    equipmentPicker.classList.add('open');
+    positionPopover(equipmentPicker, equipmentBtn);
+  }
+
+  function closeEquipmentPicker() {
+    if (equipmentPicker) equipmentPicker.classList.remove('open');
+  }
+
+  function selectBenchItem(item) {
+    benchItems.forEach(b => b.el.classList.toggle('selected', b === item));
+  }
+
+  function placeBenchItem(item) {
+    item.el.style.transform = `translate3d(${item.x.toFixed(1)}px, ${item.y.toFixed(1)}px, 0)`;
+  }
+
+  function removeBenchItem(item) {
+    item.el.remove();
+    const idx = benchItems.indexOf(item);
+    if (idx !== -1) benchItems.splice(idx, 1);
+  }
+
+  function addBenchItem(def) {
+    const el = document.createElement('div');
+    el.className = 'virtual-lab-equipment-item';
+    el.title = `${def.name} – ${def.use}`;
+    el.innerHTML = `<svg class="vlab-eq-svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${def.svg}</svg>
+      <span class="virtual-lab-equipment-label">${escapeHTML(def.name)}</span>
+      <button class="virtual-lab-equipment-remove" type="button" aria-label="${escapeHTML(t("virtualLab.removeEquipment", "Remove"))}">×</button>`;
+    scene.appendChild(el);
+
+    const sw = scene.offsetWidth || 800;
+    const sh = scene.offsetHeight || 540;
+    const size = el.offsetWidth || 76;
+    // Spawn in the first free grid cell from the top-left of the bench
+    const cellW = size + 16;
+    const cellH = size + 26;
+    const cols = Math.max(1, Math.floor((sw - 80) / cellW));
+    const rows = Math.max(1, Math.floor((sh - 90) / cellH));
+    let x = 80, y = 16;
+    for (let i = 0; i < cols * rows; i++) {
+      const cx = 80 + (i % cols) * cellW;
+      const cy = 16 + Math.floor(i / cols) * cellH;
+      if (!benchItems.some(b => Math.abs(b.x - cx) < size && Math.abs(b.y - cy) < size)) {
+        x = cx; y = cy;
+        break;
+      }
+    }
+    const item = {
+      def, el, x, y,
+      dragging: false, pointerId: null, offsetX: 0, offsetY: 0,
+    };
+    benchItems.push(item);
+    placeBenchItem(item);
+    selectBenchItem(item);
+
+    el.querySelector('.virtual-lab-equipment-remove').addEventListener('click', (e) => {
+      e.stopPropagation();
+      removeBenchItem(item);
+    });
+
+    el.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0 || e.target.closest('.virtual-lab-equipment-remove')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      closePicker();
+      closeEquipmentPicker();
+      selectBenchItem(item);
+      const sceneRect = scene.getBoundingClientRect();
+      item.dragging = true;
+      item.pointerId = e.pointerId;
+      item.offsetX = e.clientX - sceneRect.left - item.x;
+      item.offsetY = e.clientY - sceneRect.top - item.y;
+      el.classList.add('dragging');
+      if (typeof el.setPointerCapture === 'function') el.setPointerCapture(e.pointerId);
+    });
+
+    el.addEventListener('pointermove', (e) => {
+      if (!item.dragging || item.pointerId !== e.pointerId) return;
+      const sceneRect = scene.getBoundingClientRect();
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      item.x = clamp(e.clientX - sceneRect.left - item.offsetX, 0, Math.max(0, sceneRect.width - w));
+      item.y = clamp(e.clientY - sceneRect.top - item.offsetY, 0, Math.max(0, sceneRect.height - h));
+      placeBenchItem(item);
+    });
+
+    const endDrag = (e) => {
+      if (item.pointerId !== e.pointerId) return;
+      item.dragging = false;
+      item.pointerId = null;
+      el.classList.remove('dragging');
+    };
+    el.addEventListener('pointerup', endDrag);
+    el.addEventListener('pointercancel', endDrag);
+  }
+
+  if (equipmentList) {
+    equipmentList.addEventListener("click", (e) => {
+      const btn = e.target.closest('.virtual-lab-picker-item');
+      if (!btn) return;
+      const def = LAB_EQUIPMENT.find(item => item.id === btn.dataset.equipment);
+      if (def) addBenchItem(def);
+      closeEquipmentPicker();
+    }, { signal });
+  }
+
+  if (equipmentSearch) {
+    equipmentSearch.addEventListener("input", () => buildEquipmentHTML(equipmentSearch.value), { signal });
+  }
+
+  if (equipmentClearBtn) {
+    equipmentClearBtn.addEventListener("click", () => {
+      benchItems.slice().forEach(removeBenchItem);
+      closeEquipmentPicker();
+    }, { signal });
+  }
+
+  if (equipmentBtn) {
+    equipmentBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (equipmentPicker?.classList.contains('open')) closeEquipmentPicker();
+      else openEquipmentPicker();
+    }, { signal });
+  }
+
+  // Close popovers / deselect bench items when clicking elsewhere
+  document.addEventListener("pointerdown", (e) => {
+    if (equipmentPicker?.classList.contains('open') &&
+        !equipmentPicker.contains(e.target) && !equipmentBtn?.contains(e.target)) {
+      closeEquipmentPicker();
+    }
+    if (!e.target.closest?.('.virtual-lab-equipment-item')) selectBenchItem(null);
+  }, { signal });
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -2505,7 +2708,8 @@ function attachVirtualLabListeners() {
     document.addEventListener("pointerdown", (e) => {
       const cubeEl = document.getElementById('virtual-lab-metal-cube');
       if (elementPicker && elementPicker.classList.contains('open') &&
-          !elementPicker.contains(e.target) && (!cubeEl || !cubeEl.contains(e.target))) {
+          !elementPicker.contains(e.target) && !changeElementBtn?.contains(e.target) &&
+          (!cubeEl || !cubeEl.contains(e.target))) {
         closePicker();
       }
     }, { signal });
@@ -2554,6 +2758,7 @@ function attachVirtualLabListeners() {
     // Clean up reaction bubbles
     rxn.bubbles.forEach(b => b.el.remove());
     rxn.bubbles = [];
+    benchItems.slice().forEach(removeBenchItem);
     fluidLayer.innerHTML = "";
     spillLayer.innerHTML = "";
   };

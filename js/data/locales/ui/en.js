@@ -691,7 +691,13 @@ export const enUI = {
     "removeWater": "Remove All Water",
     "beakerAria": "Beaker",
     "reset": "Reset",
-    "element": "Element"
+    "element": "Element",
+    "equipment": "Equipment",
+    "searchElements": "Search elements…",
+    "searchEquipment": "Search equipment…",
+    "clearEquipment": "Clear bench",
+    "removeEquipment": "Remove",
+    "noResults": "No matches"
   },
   "virtualLabTutorial": {
     "sceneTitle": "Virtual Chemistry Lab",
