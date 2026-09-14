@@ -525,3 +525,292 @@
   color: #94a3b8;
   cursor: pointer;
 }
+
+/* ---------- Orbitals: 3D cloud + shell tracker ---------- */
+
+.evt-panel.evt-orbitals {
+  inset: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.evt-orbit-view {
+  position: absolute;
+  inset: 0;
+  font-family: "Inter", sans-serif;
+}
+
+.evt-orbit-view[data-mode="cloud"] {
+  background: #070b16;
+}
+
+.evt-cloud-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  touch-action: none;
+}
+
+.evt-cloud-canvas:active {
+  cursor: grabbing;
+}
+
+.evt-orbit-view[data-mode="boxes"] .evt-cloud-canvas,
+.evt-orbit-view[data-mode="boxes"] .evt-cloud-meta {
+  display: none;
+}
+
+.evt-cloud-meta {
+  position: absolute;
+  top: 22px;
+  right: 80px;
+  text-align: right;
+  font: 0.72rem/1.6 ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color: rgba(148, 197, 255, 0.7);
+  pointer-events: none;
+}
+
+.evt-boxes-view {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 84px;
+  left: 330px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow: auto;
+}
+
+.evt-orbit-view[data-mode="boxes"] .evt-cloud-pause {
+  display: none;
+}
+
+.evt-orbit-view[data-mode="cloud"] .evt-boxes-view {
+  display: none;
+}
+
+.evt-shell-card {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 290px;
+  max-width: calc(100% - 40px);
+  max-height: calc(100% - 110px);
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-radius: 20px;
+  background: rgba(250, 249, 246, 0.96);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+  color: #1e293b;
+  z-index: 5;
+}
+
+.evt-shell-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.evt-shell-title,
+.evt-shell-pop-head {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.evt-shell-chips {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 3px;
+}
+
+.evt-shell-chip {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  font: 600 0.72rem "Inter", sans-serif;
+  background: transparent;
+  color: #cbd5e1;
+  cursor: default;
+  transition: transform 0.2s, background 0.2s, opacity 0.2s, box-shadow 0.2s;
+}
+
+.evt-shell-chip.filled {
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+}
+
+.evt-shell-chip.filled:hover {
+  transform: scale(1.1);
+}
+
+.evt-shell-chip.active {
+  background: #eab308;
+  color: #111827;
+  box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.3);
+}
+
+.evt-shell-chip.dimmed {
+  opacity: 0.35;
+}
+
+.evt-shell-pop-head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.evt-shell-pop-head span:last-child {
+  font-family: ui-monospace, Menlo, monospace;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.evt-shell-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.evt-shell-bar {
+  display: grid;
+  grid-template-columns: 18px 1fr 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 6px;
+  margin: 0 -6px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font: 0.72rem ui-monospace, Menlo, monospace;
+  color: #334155;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.evt-shell-bar:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.evt-shell-bar.active {
+  background: rgba(234, 179, 8, 0.14);
+}
+
+.evt-shell-bar.dimmed {
+  opacity: 0.4;
+}
+
+.evt-shell-letter {
+  text-align: left;
+  font-weight: 700;
+}
+
+.evt-shell-count {
+  text-align: right;
+}
+
+.evt-shell-track {
+  height: 3px;
+  border-radius: 3px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.evt-shell-track span {
+  display: block;
+  height: 100%;
+  background: #111827;
+  border-radius: 3px;
+}
+
+.evt-shell-bar.active .evt-shell-track span {
+  background: #eab308;
+}
+
+.evt-shell-hint {
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: #475569;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.035);
+}
+
+.evt-shell-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.evt-shell-actions button {
+  border: none;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font: 600 0.74rem "Inter", sans-serif;
+  background: rgba(0, 0, 0, 0.06);
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.evt-shell-actions button:hover {
+  background: #111827;
+  color: #fff;
+}
+
+.evt-shell-foot {
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+  font: 0.6rem/1.5 ui-monospace, Menlo, monospace;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+/* Dark chrome while the cloud is showing */
+.modal-visual-pane[data-view="orbitals"]:has(.evt-orbit-view[data-mode="cloud"]) .evt-tabbar,
+.modal-visual-pane[data-view="orbitals"]:has(.evt-orbit-view[data-mode="cloud"]) .evt-suggest-btn {
+  background: rgba(15, 23, 42, 0.85);
+  color: #e2e8f0;
+}
+
+.modal-visual-pane[data-view="orbitals"]:has(.evt-orbit-view[data-mode="cloud"]) .evt-tab {
+  color: #cbd5e1;
+}
+
+.modal-visual-pane[data-view="orbitals"]:has(.evt-orbit-view[data-mode="cloud"]) .evt-tab.active {
+  background: #1e3a5f;
+  color: #fff;
+}
+
+.modal-visual-pane[data-view="orbitals"]:has(.evt-orbit-view[data-mode="cloud"]) ~ .modal-help-btn,
+#element-modal:has(.evt-orbit-view[data-mode="cloud"]) #element-tutorial-btn,
+#element-modal:has(.evt-orbit-view[data-mode="cloud"]) #modal-close {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .evt-shell-card {
+    width: 220px;
+    padding: 14px;
+  }
+
+  .evt-boxes-view {
+    left: 0;
+    top: 260px;
+  }
+}

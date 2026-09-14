@@ -6,6 +6,7 @@
 import { finallyData } from "../data/elementsData.js";
 import { t } from "./langController.js";
 import { submitSuggestion, flashSentState, SUCCESS_ICON_SVG } from "./feedbackController.js";
+import { createOrbitalCloud } from "./orbitalCloud.js";
 
 const TABS = ["structure", "orbitals", "archive"];
 
@@ -31,6 +32,10 @@ const AUFBAU_ORDER = [
 const SUBSHELL_CAPACITY = { s: 2, p: 6, d: 10, f: 14 };
 const SUPERSCRIPTS = "⁰¹²³⁴⁵⁶⁷⁸⁹";
 
+const SHELL_LETTERS = ["K", "L", "M", "N", "O", "P", "Q"];
+const SHELL_FOCUS_KEY = "emmanuel_lab_orbital_shell_focus";
+const ORBITAL_MODE_KEY = "emmanuel_lab_orbital_mode";
+
 const archiveCache = new Map();
 
 let pane = null;
@@ -42,6 +47,7 @@ let suggestBtn = null;
 let suggestPopover = null;
 let currentElement = null;
 let activeTab = "structure";
+let orbitalCloud = null;
 
 function escapeHtml(text) {
   const div = document.createElement("div");
@@ -108,7 +114,7 @@ function fillOrbitals(electrons, orbitalCount) {
   });
 }
 
-function renderOrbitals(element) {
+function renderOrbitalBoxes(element, container) {
   const { counts, config } = getSubshellCounts(element);
   const subshells = AUFBAU_ORDER.filter((s) => counts[s]);
   const maxShell = Math.max(...subshells.map((s) => Number(s[0])));
@@ -132,7 +138,7 @@ function renderOrbitals(element) {
       </div>`;
   }).join("");
 
-  orbitalsPanel.innerHTML = `
+  container.innerHTML = `
     <div class="evt-orbitals-card">
       <div class="evt-orbitals-head">
         <div>
@@ -151,6 +157,158 @@ function renderOrbitals(element) {
       <div class="evt-orbital-list">${rows}</div>
       <p class="evt-note">${escapeHtml(t("elementView.orbitalNote", "Filled by the Aufbau principle, Hund's rule and the Pauli exclusion principle. Highlighted rows are the outer (valence) or partially filled subshells."))}</p>
     </div>`;
+}
+
+// ---------------------------------------------------------------------------
+// Orbitals — 3D electron cloud + shell tracker
+// ---------------------------------------------------------------------------
+
+function readStored(key, fallback) {
+  try {
+    return localStorage.getItem(key) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeStored(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // storage unavailable — the choice just won't be remembered
+  }
+}
+
+function getShellCounts(element) {
+  const { counts } = getSubshellCounts(element);
+  const shells = [];
+  for (const [sub, count] of Object.entries(counts)) {
+    const n = Number(sub[0]);
+    shells[n - 1] = (shells[n - 1] || 0) + count;
+  }
+  return Array.from({ length: shells.length }, (_, i) => shells[i] || 0);
+}
+
+function destroyOrbitalCloud() {
+  if (orbitalCloud) {
+    orbitalCloud.destroy();
+    orbitalCloud = null;
+  }
+}
+
+function shellHint(shellIndex, shellCounts) {
+  const n = shellIndex + 1;
+  const letter = SHELL_LETTERS[shellIndex];
+  const capacity = 2 * n * n;
+  const count = shellCounts[shellIndex] || 0;
+  const status = count === capacity
+    ? t("elementView.shellFull", "full")
+    : `${capacity - count} ${t("elementView.shellFree", "spaces left")}`;
+  return `<b>${letter}</b> · n = ${n} · 2n² = ${capacity} e⁻ max · ${escapeHtml(status)}`;
+}
+
+function renderOrbitals(element) {
+  destroyOrbitalCloud();
+  const shellCounts = getShellCounts(element);
+  const total = shellCounts.reduce((a, b) => a + b, 0);
+  const { config } = getSubshellCounts(element);
+  const radius = finallyData[element.number]?.level3_properties?.physical?.atomicRadius
+    || finallyData[element.number]?.level3_properties?.atomicRadius
+    || "";
+  const mode = readStored(ORBITAL_MODE_KEY, "cloud") === "boxes" ? "boxes" : "cloud";
+
+  const storedFocus = readStored(SHELL_FOCUS_KEY, "all");
+  let focus = SHELL_LETTERS.indexOf(storedFocus);
+  if (focus >= shellCounts.length) focus = -1;
+
+  const chips = SHELL_LETTERS.map((letter, i) => `
+    <button type="button" class="evt-shell-chip ${i < shellCounts.length ? "filled" : ""}" data-shell="${i}"
+      ${i < shellCounts.length ? "" : "disabled"} aria-pressed="false">${letter}</button>`).join("");
+
+  const bars = shellCounts.map((count, i) => {
+    const capacity = 2 * (i + 1) * (i + 1);
+    return `
+      <button type="button" class="evt-shell-bar" data-shell="${i}">
+        <span class="evt-shell-letter">${SHELL_LETTERS[i]}</span>
+        <span class="evt-shell-track"><span style="width:${(count / capacity) * 100}%"></span></span>
+        <span class="evt-shell-count">${count}/${capacity}</span>
+      </button>`;
+  }).join("");
+
+  orbitalsPanel.innerHTML = `
+    <div class="evt-orbit-view" data-mode="${mode}">
+      <canvas class="evt-cloud-canvas" aria-label="3D electron cloud"></canvas>
+      <div class="evt-cloud-meta">
+        ${radius ? `<div>r = ${escapeHtml(radius)}</div>` : ""}
+        <div>${escapeHtml(config)}</div>
+      </div>
+      <div class="evt-boxes-view"></div>
+      <aside class="evt-shell-card">
+        <div class="evt-shell-row">
+          <span class="evt-shell-title">${escapeHtml(t("elementView.shells", "Shells"))}</span>
+          <span class="evt-shell-chips">${chips}</span>
+        </div>
+        <div class="evt-shell-pop-head">
+          <span>${escapeHtml(t("elementView.shellPopulation", "Shell population"))}</span>
+          <span>${total} e⁻</span>
+        </div>
+        <div class="evt-shell-bars">${bars}</div>
+        <div class="evt-shell-hint"></div>
+        <div class="evt-shell-actions">
+          <button type="button" class="evt-cloud-pause" aria-label="Pause">❚❚</button>
+          <button type="button" class="evt-mode-toggle">${escapeHtml(mode === "cloud"
+            ? t("elementView.showBoxes", "Orbital boxes")
+            : t("elementView.showCloud", "3D cloud"))}</button>
+        </div>
+        <div class="evt-shell-foot">${escapeHtml(t("elementView.cloudNote", "Configuration-averaged density · screened hydrogenic model"))}</div>
+      </aside>
+    </div>`;
+
+  const view = orbitalsPanel.querySelector(".evt-orbit-view");
+  const hint = view.querySelector(".evt-shell-hint");
+  const pauseBtn = view.querySelector(".evt-cloud-pause");
+
+  function applyFocus(index) {
+    focus = index;
+    writeStored(SHELL_FOCUS_KEY, index >= 0 ? SHELL_LETTERS[index] : "all");
+    view.querySelectorAll("[data-shell]").forEach((el) => {
+      const active = Number(el.dataset.shell) === index;
+      el.classList.toggle("active", active);
+      el.classList.toggle("dimmed", index >= 0 && !active);
+      if (el.classList.contains("evt-shell-chip")) el.setAttribute("aria-pressed", String(active));
+    });
+    hint.innerHTML = index >= 0
+      ? shellHint(index, shellCounts)
+      : escapeHtml(t("elementView.shellTip", "Tap a shell (K, L, M…) to track it in the cloud."));
+    orbitalCloud?.setFocusShell(index >= 0 ? index : null);
+  }
+
+  view.querySelectorAll("[data-shell]").forEach((el) => {
+    el.addEventListener("click", () => {
+      const index = Number(el.dataset.shell);
+      applyFocus(focus === index ? -1 : index);
+    });
+  });
+
+  pauseBtn.addEventListener("click", () => {
+    if (!orbitalCloud) return;
+    const paused = !orbitalCloud.isPaused();
+    orbitalCloud.setPaused(paused);
+    pauseBtn.textContent = paused ? "▶" : "❚❚";
+    pauseBtn.setAttribute("aria-label", paused ? "Play" : "Pause");
+  });
+
+  view.querySelector(".evt-mode-toggle").addEventListener("click", () => {
+    writeStored(ORBITAL_MODE_KEY, mode === "cloud" ? "boxes" : "cloud");
+    renderOrbitals(element);
+  });
+
+  if (mode === "cloud") {
+    orbitalCloud = createOrbitalCloud(view.querySelector(".evt-cloud-canvas"), shellCounts, element.number);
+  } else {
+    renderOrbitalBoxes(element, view.querySelector(".evt-boxes-view"));
+  }
+  applyFocus(focus);
 }
 
 // ---------------------------------------------------------------------------
@@ -347,6 +505,7 @@ async function sendSuggestion(event) {
 // ---------------------------------------------------------------------------
 
 function showPanel(panel, visible) {
+  if (!visible && panel === orbitalsPanel) destroyOrbitalCloud();
   panel.hidden = !visible;
   panel.style.display = visible ? "" : "none";
   if (!visible) panel.innerHTML = "";
@@ -422,6 +581,7 @@ export function setElementViewElement(element) {
   if (!pane) return;
   currentElement = element;
   closeSuggestPopover();
+  destroyOrbitalCloud();
   orbitalsPanel.innerHTML = "";
   archivePanel.innerHTML = "";
   setActiveTab(activeTab);
