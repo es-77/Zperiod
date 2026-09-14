@@ -124,7 +124,7 @@ export function createToolsModalController(options = {}) {
 
     if (modal) {
       modal.addEventListener("click", (e) => {
-        if (window._zperiodIsDragging) return;
+        if (window._emmanuelLabIsDragging) return;
         if (e.target === modal) closeToolModal();
       });
     }

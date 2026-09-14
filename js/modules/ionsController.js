@@ -612,7 +612,7 @@ function updateVirtualLabLink(ion) {
   if (!card) return;
   card.querySelector(".vlab-reactivity-link")?.remove();
   const substance = getSubstance(ION_TO_SUBSTANCE[ion.id]);
-  if (!substance || typeof window.zperiodOpenVirtualLab !== "function") return;
+  if (!substance || typeof window.emmanuelLabOpenVirtualLab !== "function") return;
 
   const link = document.createElement("button");
   link.type = "button";
@@ -625,7 +625,7 @@ function updateVirtualLabLink(ion) {
   link.addEventListener("click", (e) => {
     e.stopPropagation();
     document.getElementById("ion-modal-close")?.click();
-    window.zperiodOpenVirtualLab(substance.id);
+    window.emmanuelLabOpenVirtualLab(substance.id);
   });
   card.appendChild(link);
 }
@@ -1250,7 +1250,7 @@ function openIonModal(ion) {
 
   // Show modal
   modal.classList.add("active");
-  document.title = `Zperiod - ${localizedIon.name}`;
+  document.title = `Emmanuel Lab - ${localizedIon.name}`;
 
   // Re-apply fitText after modal is active to ensure clientWidth is correct
   setTimeout(() => {
@@ -1284,7 +1284,7 @@ function openIonModal(ion) {
     closeBtn.onclick = () => {
       modal.classList.remove("active");
       document.body.classList.remove("hide-nav");
-      document.title = "Zperiod";
+      document.title = "Emmanuel Lab";
 
       // Reset headline layout for element modal?
       // No, this is #ion-modal, distinct from #element-modal.
@@ -1295,11 +1295,11 @@ function openIonModal(ion) {
   }
 
   modal.onclick = (e) => {
-    if (window._zperiodIsDragging) return;
+    if (window._emmanuelLabIsDragging) return;
     if (e.target === modal) {
       modal.classList.remove("active");
       document.body.classList.remove("hide-nav");
-      document.title = "Zperiod";
+      document.title = "Emmanuel Lab";
     }
   };
 }

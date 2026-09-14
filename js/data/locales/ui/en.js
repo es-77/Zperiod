@@ -14,9 +14,9 @@ export const enUI = {
   },
   "mobile": {
     "desktopOnlyTitle": "Desktop Experience Only",
-    "desktopOnlyText": "Please access Zperiod on a desktop browser.",
+    "desktopOnlyText": "Please access Emmanuel Lab on a desktop browser.",
     "rotateTitle": "Rotate Your iPad",
-    "rotateText": "Zperiod is best experienced in landscape mode. Please rotate your device."
+    "rotateText": "Emmanuel Lab is best experienced in landscape mode. Please rotate your device."
   },
   "aria": {
     "changeLanguage": "Change language",
@@ -138,7 +138,7 @@ export const enUI = {
     "density": "Density",
     "energy": "Energy",
     "sendSuggestion": "Send a Suggestion",
-    "suggestHint": "Help us improve Zperiod — pick a topic or write your own.",
+    "suggestHint": "Help us improve Emmanuel Lab — pick a topic or write your own.",
     "sendBtnText": "Send",
     "preferences": "Preferences",
     "appearance": "Appearance",
@@ -561,13 +561,13 @@ export const enUI = {
   },
   "assistant": {
     "fabAriaOpen": "Open AI Assistant",
-    "name": "Zperiod AI",
+    "name": "Emmanuel Lab AI",
     "status": "Chemistry Assistant",
     "closeAria": "Close assistant",
     "stopAria": "Stop generation",
     "inputPlaceholder": "Ask a chemistry question...",
     "sendAria": "Send message",
-    "welcomeLine1": "Welcome to Zperiod AI. How can I assist you with chemistry today?",
+    "welcomeLine1": "Welcome to Emmanuel Lab AI. How can I assist you with chemistry today?",
     "welcomeLine2": "You can ask me directly to:",
     "welcomeMolar": "Calculate molar mass (e.g., H2O)",
     "welcomeBalance": "Balance equations (e.g., Fe + O2 -> Fe2O3)",
@@ -743,7 +743,7 @@ export const enUI = {
   },
   "onboarding": {
     "phrases": [
-      "Welcome to Zperiod",
+      "Welcome to Emmanuel Lab",
       "Interactive Chemistry",
       "Master the Elements",
       "Molecular Wonders"

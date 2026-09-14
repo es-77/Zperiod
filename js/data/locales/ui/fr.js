@@ -14,9 +14,9 @@ export const frUI = {
   },
   "mobile": {
     "desktopOnlyTitle": "Experience reservee au bureau",
-    "desktopOnlyText": "Veuillez acceder a Zperiod depuis un navigateur sur ordinateur.",
+    "desktopOnlyText": "Veuillez acceder a Emmanuel Lab depuis un navigateur sur ordinateur.",
     "rotateTitle": "Tournez votre iPad",
-    "rotateText": "Zperiod est optimisé en mode paysage. Veuillez tourner votre appareil."
+    "rotateText": "Emmanuel Lab est optimisé en mode paysage. Veuillez tourner votre appareil."
   },
   "aria": {
     "changeLanguage": "Changer la langue",
@@ -136,7 +136,7 @@ export const frUI = {
     "density": "Densite",
     "energy": "Energie",
     "sendSuggestion": "Envoyer une suggestion",
-    "suggestHint": "Aidez-nous a ameliorer Zperiod — choisissez un sujet ou ecrivez votre idee.",
+    "suggestHint": "Aidez-nous a ameliorer Emmanuel Lab — choisissez un sujet ou ecrivez votre idee.",
     "chipMoreData": "Plus de donnees",
     "chipBugReport": "Signaler un bug",
     "chipNewTool": "Nouvel outil",
@@ -515,13 +515,13 @@ export const frUI = {
   },
   "assistant": {
     "fabAriaOpen": "Ouvrir l'assistant IA",
-    "name": "Zperiod AI",
+    "name": "Emmanuel Lab AI",
     "status": "Assistant de chimie",
     "closeAria": "Fermer l'assistant",
     "stopAria": "Arreter la generation",
     "inputPlaceholder": "Posez une question de chimie...",
     "sendAria": "Envoyer le message",
-    "welcomeLine1": "Bienvenue sur Zperiod AI. Comment puis-je vous aider en chimie aujourd'hui ?",
+    "welcomeLine1": "Bienvenue sur Emmanuel Lab AI. Comment puis-je vous aider en chimie aujourd'hui ?",
     "welcomeLine2": "Vous pouvez me demander directement de :",
     "welcomeMolar": "Calculer une masse molaire (ex. H2O)",
     "welcomeBalance": "Equilibrer des equations (ex. Fe + O2 -> Fe2O3)",
@@ -672,7 +672,7 @@ export const frUI = {
   },
   "onboarding": {
     "phrases": [
-      "Bienvenue sur Zperiod",
+      "Bienvenue sur Emmanuel Lab",
       "Chimie Interactive",
       "Maîtrisez les éléments",
       "Merveilles moléculaires"

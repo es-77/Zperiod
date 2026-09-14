@@ -14,9 +14,9 @@ export const zhHantUI = {
   },
   "mobile": {
     "desktopOnlyTitle": "仅支持桌面端体验",
-    "desktopOnlyText": "请在桌面浏览器中访问 Zperiod。",
+    "desktopOnlyText": "请在桌面浏览器中访问 Emmanuel Lab。",
     "rotateTitle": "请横屏使用",
-    "rotateText": "Zperiod 在横屏模式下体验更佳，请旋转您的设备。"
+    "rotateText": "Emmanuel Lab 在横屏模式下体验更佳，请旋转您的设备。"
   },
   "aria": {
     "changeLanguage": "切換語言",
@@ -136,7 +136,7 @@ export const zhHantUI = {
     "density": "密度",
     "energy": "能量",
     "sendSuggestion": "送出建議",
-    "suggestHint": "幫助我們改進 Zperiod — 選擇主題或自由輸入。",
+    "suggestHint": "幫助我們改進 Emmanuel Lab — 選擇主題或自由輸入。",
     "sendBtnText": "送出",
     "preferences": "高级能力",
     "appearance": "外观设置",
@@ -559,13 +559,13 @@ export const zhHantUI = {
   },
   "assistant": {
     "fabAriaOpen": "打开 AI 助手",
-    "name": "Zperiod AI",
+    "name": "Emmanuel Lab AI",
     "status": "化学助手",
     "closeAria": "关闭助手",
     "stopAria": "停止生成",
     "inputPlaceholder": "输入一个化学问题...",
     "sendAria": "发送消息",
-    "welcomeLine1": "欢迎使用 Zperiod AI。今天想了解什么化学内容？",
+    "welcomeLine1": "欢迎使用 Emmanuel Lab AI。今天想了解什么化学内容？",
     "welcomeLine2": "你可以直接让我：",
     "welcomeMolar": "计算摩尔质量（例如 H2O）",
     "welcomeBalance": "配平化学方程式（例如 Fe + O2 -> Fe2O3）",
@@ -706,7 +706,7 @@ export const zhHantUI = {
   },
   "onboarding": {
     "phrases": [
-      "歡迎來到 Zperiod",
+      "歡迎來到 Emmanuel Lab",
       "互動化學世界",
       "探索元素奧秘",
       "分子之美"

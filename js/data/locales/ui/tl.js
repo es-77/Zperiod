@@ -14,9 +14,9 @@ export const tlUI = {
   },
   "mobile": {
     "desktopOnlyTitle": "Desktop Lamang",
-    "desktopOnlyText": "Pakibuksan ang Zperiod sa desktop browser.",
+    "desktopOnlyText": "Pakibuksan ang Emmanuel Lab sa desktop browser.",
     "rotateTitle": "I-rotate ang iyong iPad",
-    "rotateText": "Mas maganda ang Zperiod sa landscape mode. Mangyaring i-rotate ang iyong device."
+    "rotateText": "Mas maganda ang Emmanuel Lab sa landscape mode. Mangyaring i-rotate ang iyong device."
   },
   "aria": {
     "changeLanguage": "Palitan ang wika",
@@ -136,7 +136,7 @@ export const tlUI = {
     "density": "Densidad",
     "energy": "Enerhiya",
     "sendSuggestion": "Magpadala ng mungkahi",
-    "suggestHint": "Tulungan kaming pagandahin ang Zperiod — pumili ng paksa o isulat ang sarili mong mungkahi.",
+    "suggestHint": "Tulungan kaming pagandahin ang Emmanuel Lab — pumili ng paksa o isulat ang sarili mong mungkahi.",
     "sendBtnText": "Ipadala",
     "preferences": "Preferences",
     "appearance": "Appearance",
@@ -559,13 +559,13 @@ export const tlUI = {
   },
   "assistant": {
     "fabAriaOpen": "Open AI Assistant",
-    "name": "Zperiod AI",
+    "name": "Emmanuel Lab AI",
     "status": "Chemistry Assistant",
     "closeAria": "Close assistant",
     "stopAria": "Stop generation",
     "inputPlaceholder": "Ask a chemistry question...",
     "sendAria": "Send message",
-    "welcomeLine1": "Welcome to Zperiod AI. How can I assist you with chemistry today?",
+    "welcomeLine1": "Welcome to Emmanuel Lab AI. How can I assist you with chemistry today?",
     "welcomeLine2": "You can ask me directly to:",
     "welcomeMolar": "Calculate molar mass (e.g., H2O)",
     "welcomeBalance": "Balance equations (e.g., Fe + O2 -> Fe2O3)",
@@ -706,7 +706,7 @@ export const tlUI = {
   },
   "onboarding": {
     "phrases": [
-      "Maligayang pagdating sa Zperiod",
+      "Maligayang pagdating sa Emmanuel Lab",
       "Interactive na Chemistry",
       "Kabisaduhin ang mga Elemento",
       "Mga kamangha-manghang molekular"

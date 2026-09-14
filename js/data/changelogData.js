@@ -1,5 +1,5 @@
 // =============================================================================
-// Changelog Data — Zperiod version history
+// Changelog Data — Emmanuel Lab version history
 // =============================================================================
 
 export const changelogData = [
@@ -61,7 +61,7 @@ export const changelogData = [
     version: "1.0.0",
     date: "2026-02-07",
     changes: [
-      "Official v1.0 release — Zperiod goes public",
+      "Official v1.0 release — Emmanuel Lab goes public",
       "118 elements with full chemical data",
       "3D atom models with interactive electron orbits",
       "Ion engine with 50+ common ions",

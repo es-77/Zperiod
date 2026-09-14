@@ -1,4 +1,4 @@
-# 🧪 Zperiod
+# 🧪 Emmanuel Lab
 
 <div align="center">
 
@@ -15,7 +15,7 @@
 ---
 
 > [!NOTE]
-> This repository contains the open-source legacy version of Zperiod. The current product is available at [zperiod.app](https://zperiod.app) and may differ significantly from this codebase.
+> This repository contains the open-source legacy version of Emmanuel Lab. The current product is available at [zperiod.app](https://zperiod.app) and may differ significantly from this codebase.
 
 ---
 
@@ -70,10 +70,10 @@
 ### Local Development
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/zperiod.git
+git clone https://github.com/YOUR_USERNAME/emmanuel-lab.git
 
 # Navigate to project directory
-cd zperiod
+cd emmanuel-lab
 
 # Install dependencies
 npm install
@@ -102,7 +102,7 @@ npm run preview
 ## 📁 Project Structure
 
 ```
-zperiod/
+emmanuel-lab/
 ├── .github/workflows/ci.yml # CI pipeline
 ├── package.json            # Vite scripts and dependencies
 ├── index.html              # Main HTML file
@@ -138,7 +138,7 @@ zperiod/
 
 ## 🎨 Design Philosophy
 
-Zperiod follows modern design principles:
+Emmanuel Lab follows modern design principles:
 
 - **Minimal & Clean** - Inspired by Apple's design language
 - **Glassmorphism** - Subtle frosted glass effects

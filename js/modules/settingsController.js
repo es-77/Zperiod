@@ -7,8 +7,8 @@ import {
 } from "./feedbackController.js";
 import { getLang, onLangChange, t } from "./langController.js";
 
-const ANIMATION_PAUSED_KEY = "zperiod_anim_paused";
-const ANIMATION_SPEED_KEY = "zperiod_anim_speed";
+const ANIMATION_PAUSED_KEY = "emmanuel_lab_anim_paused";
+const ANIMATION_SPEED_KEY = "emmanuel_lab_anim_speed";
 const DEFAULT_ANIMATION_SPEED = 0.6;
 const SETTINGS_FEEDBACK_DURATION_MS = 2500;
 const UNIT_SYNC_RESIZE_DELAY_MS = 80;
@@ -126,7 +126,7 @@ function initSettingsSuggestionForm() {
     const text = suggInput.value.trim();
     if (!text) return;
 
-    await submitSuggestion(text, { source: "Zperiod Settings" });
+    await submitSuggestion(text, { source: "Emmanuel Lab Settings" });
 
     suggInput.value = "";
     resizeTextarea();
@@ -228,31 +228,31 @@ function initAnimationControls() {
   const speedLabel = document.getElementById("speed-value-label");
 
   if (speedSlider) {
-    speedSlider.value = window._zperiodAnimSpeed;
+    speedSlider.value = window._emmanuelLabAnimSpeed;
     if (speedLabel) {
-      speedLabel.textContent = `${window._zperiodAnimSpeed.toFixed(1)}×`;
+      speedLabel.textContent = `${window._emmanuelLabAnimSpeed.toFixed(1)}×`;
     }
   }
 
   if (playToggle) {
-    updatePlayToggleIcon(playToggle, window._zperiodAnimPaused);
+    updatePlayToggleIcon(playToggle, window._emmanuelLabAnimPaused);
   }
 
-  applyAnimationPauseState(window._zperiodAnimPaused);
+  applyAnimationPauseState(window._emmanuelLabAnimPaused);
 
   if (playToggle) {
     playToggle.addEventListener("click", () => {
-      window._zperiodAnimPaused = !window._zperiodAnimPaused;
-      localStorage.setItem(ANIMATION_PAUSED_KEY, window._zperiodAnimPaused);
-      updatePlayToggleIcon(playToggle, window._zperiodAnimPaused);
-      applyAnimationPauseState(window._zperiodAnimPaused);
+      window._emmanuelLabAnimPaused = !window._emmanuelLabAnimPaused;
+      localStorage.setItem(ANIMATION_PAUSED_KEY, window._emmanuelLabAnimPaused);
+      updatePlayToggleIcon(playToggle, window._emmanuelLabAnimPaused);
+      applyAnimationPauseState(window._emmanuelLabAnimPaused);
     });
   }
 
   if (speedSlider) {
     speedSlider.addEventListener("input", () => {
       const value = parseFloat(speedSlider.value);
-      window._zperiodAnimSpeed = value;
+      window._emmanuelLabAnimSpeed = value;
       localStorage.setItem(ANIMATION_SPEED_KEY, value);
       if (speedLabel) speedLabel.textContent = `${value.toFixed(1)}×`;
     });
@@ -278,11 +278,11 @@ function initPreferencesCard() {
   const clearBtn = document.getElementById("settings-clear-data");
 
   if (reduceToggle) {
-    const isReduced = localStorage.getItem("zperiod_reduce_motion") === "true";
+    const isReduced = localStorage.getItem("emmanuel_lab_reduce_motion") === "true";
     reduceToggle.checked = isReduced;
     
     reduceToggle.addEventListener("change", (e) => {
-      localStorage.setItem("zperiod_reduce_motion", e.target.checked);
+      localStorage.setItem("emmanuel_lab_reduce_motion", e.target.checked);
       if (e.target.checked) document.body.classList.add("reduce-motion");
       else document.body.classList.remove("reduce-motion");
     });

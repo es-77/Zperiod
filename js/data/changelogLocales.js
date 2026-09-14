@@ -54,7 +54,7 @@ export const changelogLocales = {
     "1.0.0": {
       "date": "2026-02-07",
       "changes": [
-        "正式v1.0发布——Zperiod上市",
+        "正式v1.0发布——Emmanuel Lab上市",
         "118 种元素，具有完整的化学数据",
         "具有交互式电子轨道的 3D 原子模型",
         "具有 50 多种常见离子的离子发动机",
@@ -132,7 +132,7 @@ export const changelogLocales = {
     "1.0.0": {
       "date": "2026-02-07",
       "changes": [
-        "Sortie officielle v1.0 — Zperiod devient public",
+        "Sortie officielle v1.0 — Emmanuel Lab devient public",
         "118 éléments avec des données chimiques complètes",
         "Modèles d'atomes 3D avec orbites électroniques interactives",
         "Moteur ionique avec plus de 50 ions communs",
@@ -288,7 +288,7 @@ export const changelogLocales = {
     "1.0.0": {
       "date": "2026-02-07",
       "changes": [
-        "نسخه رسمی نسخه 1.0 - Zperiod عمومی می شود",
+        "نسخه رسمی نسخه 1.0 - Emmanuel Lab عمومی می شود",
         "118 عنصر با داده های شیمیایی کامل",
         "مدل های اتم سه بعدی با مدارهای الکترونی تعاملی",
         "موتور یونی با بیش از 50 یون مشترک",
@@ -366,7 +366,7 @@ export const changelogLocales = {
     "1.0.0": {
       "date": "2026-02-07",
       "changes": [
-        "سرکاری v1.0 ریلیز — Zperiod عوامی ہے۔",
+        "سرکاری v1.0 ریلیز — Emmanuel Lab عوامی ہے۔",
         "مکمل کیمیائی ڈیٹا کے ساتھ 118 عناصر",
         "انٹرایکٹو الیکٹران مدار کے ساتھ 3D ایٹم ماڈل",
         "50+ عام آئنوں کے ساتھ آئن انجن",
@@ -444,7 +444,7 @@ export const changelogLocales = {
     "1.0.0": {
       "date": "2026-02-07",
       "changes": [
-        "Opisyal na paglabas ng v1.0 — Pumupunta sa publiko ang Zperiod",
+        "Opisyal na paglabas ng v1.0 — Pumupunta sa publiko ang Emmanuel Lab",
         "118 elemento na may buong data ng kemikal",
         "Mga modelong 3D atom na may mga interactive na electron orbit",
         "Ion engine na may 50+ karaniwang ion",
@@ -522,7 +522,7 @@ export const changelogLocales = {
     "1.0.0": {
       "date": "2026-02-07",
       "changes": [
-        "正式v1.0發佈——Zperiod上市",
+        "正式v1.0發佈——Emmanuel Lab上市",
         "118 種元素，具有完整的化學數據",
         "具有交互式電子軌道的 3D 原子模型",
         "具有 50 多種常見離子的離子發動機",

@@ -14,9 +14,9 @@ export const urUI = {
   },
   "mobile": {
     "desktopOnlyTitle": "صرف ڈیسک ٹاپ تجربہ",
-    "desktopOnlyText": "براہ کرم Zperiod کو ڈیسک ٹاپ براؤزر میں کھولیں۔",
+    "desktopOnlyText": "براہ کرم Emmanuel Lab کو ڈیسک ٹاپ براؤزر میں کھولیں۔",
     "rotateTitle": "آئی پیڈ کو گھمائیں",
-    "rotateText": "Zperiod لینڈ اسکیپ موڈ میں بہتر کام کرتا ہے۔ براہ کرم اپنا آلہ گھمائیں۔"
+    "rotateText": "Emmanuel Lab لینڈ اسکیپ موڈ میں بہتر کام کرتا ہے۔ براہ کرم اپنا آلہ گھمائیں۔"
   },
   "aria": {
     "changeLanguage": "زبان تبدیل کریں",
@@ -136,7 +136,7 @@ export const urUI = {
     "density": "کثافت",
     "energy": "توانائی",
     "sendSuggestion": "تجویز بھیجیں",
-    "suggestHint": "Zperiod کو بہتر بنانے میں ہماری مدد کریں — ایک موضوع منتخب کریں یا اپنی تجویز لکھیں۔",
+    "suggestHint": "Emmanuel Lab کو بہتر بنانے میں ہماری مدد کریں — ایک موضوع منتخب کریں یا اپنی تجویز لکھیں۔",
     "sendBtnText": "بھیجیں",
     "preferences": "Preferences",
     "appearance": "Appearance",
@@ -559,13 +559,13 @@ export const urUI = {
   },
   "assistant": {
     "fabAriaOpen": "Open AI Assistant",
-    "name": "Zperiod AI",
+    "name": "Emmanuel Lab AI",
     "status": "Chemistry Assistant",
     "closeAria": "Close assistant",
     "stopAria": "Stop generation",
     "inputPlaceholder": "Ask a chemistry question...",
     "sendAria": "Send message",
-    "welcomeLine1": "Welcome to Zperiod AI. How can I assist you with chemistry today?",
+    "welcomeLine1": "Welcome to Emmanuel Lab AI. How can I assist you with chemistry today?",
     "welcomeLine2": "You can ask me directly to:",
     "welcomeMolar": "Calculate molar mass (e.g., H2O)",
     "welcomeBalance": "Balance equations (e.g., Fe + O2 -> Fe2O3)",
@@ -706,7 +706,7 @@ export const urUI = {
   },
   "onboarding": {
     "phrases": [
-      "Zperiod میں خوش آمدید",
+      "Emmanuel Lab میں خوش آمدید",
       "انٹرایکٹو کیمسٹری",
       "عناصر پر مہارت",
       "مالیکیولی عجائبات"

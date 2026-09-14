@@ -14,9 +14,9 @@ export const faUI = {
   },
   "mobile": {
     "desktopOnlyTitle": "فقط نسخه دسکتاپ",
-    "desktopOnlyText": "لطفا Zperiod را در مرورگر دسکتاپ باز کنید.",
+    "desktopOnlyText": "لطفا Emmanuel Lab را در مرورگر دسکتاپ باز کنید.",
     "rotateTitle": "آیپد را بچرخانید",
-    "rotateText": "Zperiod در حالت افقی بهتر عمل می‌کند. لطفاً دستگاه خود را بچرخانید."
+    "rotateText": "Emmanuel Lab در حالت افقی بهتر عمل می‌کند. لطفاً دستگاه خود را بچرخانید."
   },
   "aria": {
     "changeLanguage": "تغییر زبان",
@@ -136,7 +136,7 @@ export const faUI = {
     "density": "چگالی",
     "energy": "انرژی",
     "sendSuggestion": "ارسال پیشنهاد",
-    "suggestHint": "به ما کمک کنید Zperiod را بهتر کنیم — یک موضوع انتخاب کنید یا پیشنهاد خودتان را بنویسید.",
+    "suggestHint": "به ما کمک کنید Emmanuel Lab را بهتر کنیم — یک موضوع انتخاب کنید یا پیشنهاد خودتان را بنویسید.",
     "sendBtnText": "ارسال",
     "preferences": "Preferences",
     "appearance": "Appearance",
@@ -559,13 +559,13 @@ export const faUI = {
   },
   "assistant": {
     "fabAriaOpen": "Open AI Assistant",
-    "name": "Zperiod AI",
+    "name": "Emmanuel Lab AI",
     "status": "Chemistry Assistant",
     "closeAria": "Close assistant",
     "stopAria": "Stop generation",
     "inputPlaceholder": "Ask a chemistry question...",
     "sendAria": "Send message",
-    "welcomeLine1": "Welcome to Zperiod AI. How can I assist you with chemistry today?",
+    "welcomeLine1": "Welcome to Emmanuel Lab AI. How can I assist you with chemistry today?",
     "welcomeLine2": "You can ask me directly to:",
     "welcomeMolar": "Calculate molar mass (e.g., H2O)",
     "welcomeBalance": "Balance equations (e.g., Fe + O2 -> Fe2O3)",
@@ -706,7 +706,7 @@ export const faUI = {
   },
   "onboarding": {
     "phrases": [
-      "به Zperiod خوش آمدید",
+      "به Emmanuel Lab خوش آمدید",
       "شیمی تعاملی",
       "تسلط بر عناصر",
       "عجایب مولکولی"

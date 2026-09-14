@@ -9,9 +9,9 @@ function ensureDriverTutorialAssets() {
         document.head.appendChild(link);
     }
 
-    if (!document.getElementById('driver-custom-zperiod')) {
+    if (!document.getElementById('driver-custom-emmanuel-lab')) {
         const style = document.createElement('style');
-        style.id = 'driver-custom-zperiod';
+        style.id = 'driver-custom-emmanuel-lab';
         style.textContent = `
             .driver-overlay { transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important; }
             .custom-driver-popover {
@@ -135,7 +135,7 @@ export async function initElementTutorial(force = false) {
                     transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
                 }
                 
-                /* Style the popover to look more elegant and modern, matching Zperiod UI */
+                /* Style the popover to look more elegant and modern, matching Emmanuel Lab UI */
                 .custom-driver-popover {
                     border-radius: 20px !important;
                     box-shadow: 0 4px 20px rgba(0,0,0,0.1) !important;
