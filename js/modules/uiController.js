@@ -20,6 +20,11 @@ import { initCardSlider } from "./cardSliderController.js";
 import { createEITController } from "./ui/eitController.js";
 import { initElementTutorial } from "./tutorialController.js";
 import {
+  initElementViewTabs,
+  setElementViewElement,
+  resetElementViewTabs,
+} from "./elementViewTabs.js";
+import {
   t,
   onLangChange,
   getLang,
@@ -2761,6 +2766,7 @@ export function showModal(element) {
     );
   }
   modal.classList.add("active");
+  setElementViewElement(element);
   initElementTutorial();
   document.title = `Emmanuel Lab - ${localizeElementName(element)}`;
   document.body.classList.add("hide-nav");
@@ -3001,6 +3007,7 @@ export function initModalUI() {
   eduNames = document.getElementById("edu-names");
   eduIsotopes = document.getElementById("edu-isotopes");
   eduCardsContainer = document.getElementById("edu-cards-container");
+  initElementViewTabs();
 
   // Modal close handler
   function resetModalUI() {
@@ -3031,6 +3038,7 @@ export function initModalUI() {
     cleanup3D(true);
     atomContainer.classList.remove("visible");
     resetModalUI();
+    resetElementViewTabs();
   }
 
   modalClose.addEventListener("click", () => {
