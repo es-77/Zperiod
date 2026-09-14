@@ -346,6 +346,12 @@ async function sendSuggestion(event) {
 // Tabs
 // ---------------------------------------------------------------------------
 
+function showPanel(panel, visible) {
+  panel.hidden = !visible;
+  panel.style.display = visible ? "" : "none";
+  if (!visible) panel.innerHTML = "";
+}
+
 function setActiveTab(tab) {
   activeTab = tab;
   tabButtons.forEach((btn) => {
@@ -354,8 +360,12 @@ function setActiveTab(tab) {
     btn.setAttribute("aria-selected", String(isActive));
   });
   pane.dataset.view = tab;
-  orbitalsPanel.hidden = tab !== "orbitals";
-  archivePanel.hidden = tab !== "archive";
+  // Only one view may be on screen: hide + empty the inactive panels so no
+  // stale content (or a previous element's images) can show through.
+  showPanel(orbitalsPanel, tab === "orbitals");
+  showPanel(archivePanel, tab === "archive");
+  atomContainer.style.visibility = tab === "structure" ? "" : "hidden";
+  atomContainer.style.pointerEvents = tab === "structure" ? "" : "none";
   if (!currentElement) return;
   if (tab === "orbitals") renderOrbitals(currentElement);
   if (tab === "archive") loadArchive(currentElement);
@@ -412,6 +422,8 @@ export function setElementViewElement(element) {
   if (!pane) return;
   currentElement = element;
   closeSuggestPopover();
+  orbitalsPanel.innerHTML = "";
+  archivePanel.innerHTML = "";
   setActiveTab(activeTab);
 }
 
