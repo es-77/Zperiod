@@ -4,6 +4,7 @@
 // =============================================================================
 
 import { ionsData } from "../data/ionsData.js";
+import { ION_TO_SUBSTANCE, getSubstance } from "../data/mixingReactions.js";
 import { initCardSlider } from "./cardSliderController.js";
 import {
   fetchIonLocale,
@@ -605,6 +606,30 @@ function initIonSlider() {
 
 }
 
+/** "Try in Virtual Lab" link on the Reactivity card, pre-loading a matching substance */
+function updateVirtualLabLink(ion) {
+  const card = document.getElementById("reactivity-visual-card");
+  if (!card) return;
+  card.querySelector(".vlab-reactivity-link")?.remove();
+  const substance = getSubstance(ION_TO_SUBSTANCE[ion.id]);
+  if (!substance || typeof window.zperiodOpenVirtualLab !== "function") return;
+
+  const link = document.createElement("button");
+  link.type = "button";
+  link.className = "vlab-reactivity-link";
+  link.textContent = `${t("ionModal.tryInLab", "Try in Virtual Lab")}: ${substance.formula} ›`;
+  link.title = substance.name;
+  link.style.cssText =
+    "margin-top:6px;padding:4px 10px;border:none;border-radius:999px;background:rgba(30,41,59,0.85);" +
+    "color:#fff;font:inherit;font-size:0.72rem;font-weight:650;cursor:pointer;white-space:nowrap;";
+  link.addEventListener("click", (e) => {
+    e.stopPropagation();
+    document.getElementById("ion-modal-close")?.click();
+    window.zperiodOpenVirtualLab(substance.id);
+  });
+  card.appendChild(link);
+}
+
 function openIonModal(ion) {
   const modal = document.getElementById("ion-modal");
   if (!modal) return;
@@ -971,6 +996,7 @@ function openIonModal(ion) {
       // Update both slots dynamically
       updateVisualCard("litmus-visual-card", cd.level2.slotA, "slotA");
       updateVisualCard("reactivity-visual-card", cd.level2.slotB, "slotB");
+      updateVirtualLabLink(ion);
 
       // Add fitting for slot descriptions
       const descA = document.querySelector(

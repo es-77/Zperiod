@@ -1,6 +1,7 @@
 // CSS is now loaded in index.html to support native ES modules without a bundler
 
 import { t } from "./langController.js";
+import { getMixingLabMarkup } from "./mixingLab.js";
 
 const TOOL_CONTENT_FACTORIES = {
   balancer: generateBalancerToolContent,
@@ -1143,6 +1144,42 @@ function generateVirtualLabToolContent() {
                 -webkit-user-select: none;
             }
 
+            .virtual-lab-mode-tabs {
+                display: inline-flex;
+                align-self: flex-start;
+                gap: 3px;
+                padding: 3px;
+                margin-bottom: 10px;
+                border-radius: 12px;
+                background: rgba(0, 0, 0, 0.05);
+                flex-shrink: 0;
+            }
+
+            .virtual-lab-mode-tab {
+                appearance: none;
+                border: none;
+                background: none;
+                padding: 7px 14px;
+                border-radius: 9px;
+                font: inherit;
+                font-size: 13px;
+                font-weight: 650;
+                color: #64748b;
+                cursor: pointer;
+            }
+
+            .virtual-lab-mode-tab.active {
+                background: #fff;
+                color: #1e293b;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+
+            .virtual-lab-shell.mode-mix .virtual-lab-stage,
+            .virtual-lab-shell.mode-mix .virtual-lab-reaction-info,
+            .virtual-lab-shell.mode-mix .virtual-lab-element-picker {
+                display: none !important;
+            }
+
             .virtual-lab-stage {
                 width: 100%;
                 flex: 1;
@@ -1846,6 +1883,11 @@ function generateVirtualLabToolContent() {
             </defs>
         </svg>
         <div class="virtual-lab-shell">
+            <div class="virtual-lab-mode-tabs" role="tablist" aria-label="${t("virtualLab.modes", "Virtual Lab modes")}">
+                <button type="button" class="virtual-lab-mode-tab active" role="tab" aria-selected="true" data-vlab-mode="metal">${t("virtualLab.modeMetal", "Metal in Water")}</button>
+                <button type="button" class="virtual-lab-mode-tab" role="tab" aria-selected="false" data-vlab-mode="mix">${t("virtualLab.modeMix", "Mixing Lab")}</button>
+            </div>
+            ${getMixingLabMarkup()}
             <div class="virtual-lab-stage">
                 <div class="virtual-lab-scene" id="virtual-lab-scene">
                     <div class="virtual-lab-particle-layer" id="virtual-lab-particle-layer" aria-hidden="true"></div>

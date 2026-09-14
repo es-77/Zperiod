@@ -13,6 +13,7 @@ import { predictReaction } from "./reactionPredictor.js";
 import { t } from "./langController.js";
 import { elements as allElements } from "../data/elementsData.js";
 import { LAB_EQUIPMENT_GROUPS, LAB_EQUIPMENT } from "../data/labEquipment.js";
+import { initMixingLab } from "./mixingLab.js";
 
 const TOOL_LISTENER_MAP = {
   balancer: attachBalancerListeners,
@@ -23,6 +24,12 @@ const TOOL_LISTENER_MAP = {
 };
 
 let virtualLabCleanup = null;
+let virtualLabPreload = null;
+
+/** Queue options for the next Virtual Lab open, e.g. { mode: "mix", substance: "HCl" } */
+export function setVirtualLabPreload(options) {
+  virtualLabPreload = options || null;
+}
 
 export function attachToolEventListeners(toolType) {
   TOOL_LISTENER_MAP[toolType]?.();
@@ -2301,6 +2308,10 @@ function attachVirtualLabListeners() {
   }
 
   function animate() {
+    if (state.paused) {
+      state.animationFrame = 0;
+      return;
+    }
     const metrics = getCupMetrics();
     const sceneW = scene.offsetWidth || scene.clientWidth;
     const sceneH = scene.offsetHeight || scene.clientHeight;
@@ -2740,8 +2751,47 @@ function attachVirtualLabListeners() {
   handleResize();
   state.animationFrame = window.requestAnimationFrame(animate);
 
+  // ===== Mode switching: Metal in Water <-> Mixing Lab =====
+  const shell = document.querySelector('.virtual-lab-shell');
+  const modeTabs = shell ? shell.querySelectorAll('[data-vlab-mode]') : [];
+  const mixingLab = shell ? initMixingLab(shell, { signal }) : null;
+
+  function setMode(mode) {
+    if (!shell) return;
+    const isMix = mode === "mix";
+    shell.classList.toggle('mode-mix', isMix);
+    modeTabs.forEach(tab => {
+      const active = tab.dataset.vlabMode === mode;
+      tab.classList.toggle('active', active);
+      tab.setAttribute('aria-selected', String(active));
+    });
+    closePicker();
+    closeEquipmentPicker();
+    mixingLab?.setActive(isMix);
+    if (isMix) {
+      // Pause the metal-drop physics loop while it's hidden
+      state.paused = true;
+    } else if (state.paused) {
+      state.paused = false;
+      handleResize();
+      if (!state.animationFrame) state.animationFrame = window.requestAnimationFrame(animate);
+    }
+  }
+
+  modeTabs.forEach(tab => tab.addEventListener('click', () => setMode(tab.dataset.vlabMode), { signal }));
+
+  if (virtualLabPreload) {
+    const preload = virtualLabPreload;
+    virtualLabPreload = null;
+    if (preload.mode === "mix") {
+      setMode("mix");
+      if (preload.substance) setTimeout(() => mixingLab?.addSubstance(preload.substance), 450);
+    }
+  }
+
   virtualLabCleanup = () => {
     controller.abort();
+    mixingLab?.destroy();
     if (state.animationFrame) {
       window.cancelAnimationFrame(state.animationFrame);
     }

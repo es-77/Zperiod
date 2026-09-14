@@ -132,7 +132,7 @@ export function createToolsModalController(options = {}) {
     modalHandlersInitialized = true;
   }
 
-  async function openToolModal(toolType) {
+  async function openToolModal(toolType, { skipTutorial = false } = {}) {
     const { modal, body, helpOverlay } = getModalElements();
     if (!modal || !body) {
       return;
@@ -156,7 +156,8 @@ export function createToolsModalController(options = {}) {
       if (typeof attachToolEventListeners === "function") {
         requestAnimationFrame(() => {
           attachToolEventListeners(toolType);
-          
+
+          if (skipTutorial) return;
           if (toolType === "balancer") {
             import("./tutorialController.js").then((m) => m.initBalancerTutorial(false));
           } else if (toolType === "molar-mass") {

@@ -1,5 +1,5 @@
 import { getChemToolContent } from "./js/modules/chemToolContent.js";
-import { attachToolEventListeners } from "./js/modules/chemToolInteractions.js";
+import { attachToolEventListeners, setVirtualLabPreload } from "./js/modules/chemToolInteractions.js";
 import {
   buildPeriodicTable,
   initModalUI,
@@ -626,6 +626,12 @@ function bootstrapApp() {
     attachToolEventListeners,
   });
   toolsModalController.init();
+
+  // Open the Virtual Lab's Mixing Lab pre-loaded with a substance (used by ion detail pages)
+  window.zperiodOpenVirtualLab = (substance) => {
+    setVirtualLabPreload({ mode: "mix", substance });
+    toolsModalController.openToolModal("virtual-lab", { skipTutorial: true });
+  };
 
   // Register tool cache cleanup when language changes
   registerCacheCleanup(() => {
