@@ -191,7 +191,7 @@ export function initOnboardingFlow() {
     
     <div id="animation-stage" style="display:flex; flex-direction:column; align-items:center;">
         <div class="logo-container" id="onboarding-logo">
-          <img src="logo.svg" class="logo-z" alt="Z">
+          <img src="logo.svg" class="logo-z" alt="Emmanuel">
           <span class="logo-text">Emmanuel</span>
         </div>
         
